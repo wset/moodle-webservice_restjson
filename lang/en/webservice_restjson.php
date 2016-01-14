@@ -20,9 +20,9 @@
  *
  * @package    webservice_rest
  * @category   string
- * @copyright  2009 Petr Skodak
+ * @copyright  2009 Petr Skodak, 2016 Owen Barritt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'REST protocol';
-$string['rest:use'] = 'Use REST protocol';
+$string['pluginname'] = 'REST protocol (with JSON/XML input support)';
+$string['restjson:use'] = 'Use REST protocol (with JSON/XML input support)';

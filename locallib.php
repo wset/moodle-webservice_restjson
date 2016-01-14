@@ -18,8 +18,8 @@
 /**
  * REST web service implementation classes and methods.
  *
- * @package    webservice_rest
- * @copyright  2009 Jerome Mouneyrac
+ * @package    webservice_restjson
+ * @copyright  2009 Jerome Mouneyrac, 2016 Owen Barritt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -32,7 +32,7 @@ require_once("$CFG->dirroot/webservice/lib.php");
  * @copyright  2009 Petr Skoda (skodak)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class webservice_rest_server extends webservice_base_server {
+class webservice_restjson_server extends webservice_base_server {
 
     /** @var string return method ('xml' or 'json') */
     protected $restformat;
@@ -61,14 +61,27 @@ class webservice_rest_server extends webservice_base_server {
 
         // Retrieve and clean the POST/GET parameters from the parameters specific to the server.
         parent::set_web_service_call_settings();
+        
+        // Check request content type and process appropriately.
+        $defaultrestformat = 'xml';
+        if( $_SERVER["CONTENT_TYPE"] == "application/json" ){
+            $data = json_decode( file_get_contents('php://input'), true );
+            $defaultrestformat = 'json';
+        } else if( $_SERVER["CONTENT_TYPE"] == "application/xml" ){
+            $data = simplexml_load_string( file_get_contents('php://input') );
+            $data = json_decode( json_encode($data), true ); // Convert objects to assoc arrays.
+        } else {
+            $data = $_POST;
+        }
 
-        // Get GET and POST parameters.
-        $methodvariables = array_merge($_GET, $_POST);
+        // Add GET parameters.
+        $methodvariables = array_merge($_GET, (array) $data);
 
-        // Retrieve REST format parameter - 'xml' (default) or 'json'.
+        // Retrieve REST format parameter - 'xml' or 'json' if specified
+        // where not set use same format as request for xml/json requests or xml for form data.
         $restformatisset = isset($methodvariables['moodlewsrestformat'])
                 && (($methodvariables['moodlewsrestformat'] == 'xml' || $methodvariables['moodlewsrestformat'] == 'json'));
-        $this->restformat = $restformatisset ? $methodvariables['moodlewsrestformat'] : 'xml';
+        $this->restformat = $restformatisset ? $methodvariables['moodlewsrestformat'] : $defaultrestformat;
         unset($methodvariables['moodlewsrestformat']);
 
         if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
@@ -234,13 +247,13 @@ class webservice_rest_server extends webservice_base_server {
 
 
 /**
- * REST test client class
+ * RESTJSON test client class
  *
- * @package    webservice_rest
- * @copyright  2009 Petr Skoda (skodak)
+ * @package    webservice_restjson
+ * @copyright  2016 Owen Barritt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class webservice_rest_test_client implements webservice_test_client_interface {
+class webservice_restjson_test_client implements webservice_test_client_interface {
     /**
      * Execute test client WS request
      * @param string $serverurl server url (including token parameter or username/password parameters)
@@ -249,6 +262,18 @@ class webservice_rest_test_client implements webservice_test_client_interface {
      * @return mixed
      */
     public function simpletest($serverurl, $function, $params) {
-        return download_file_content($serverurl.'&wsfunction='.$function, null, $params);
+        // Setup cURL
+        $ch = curl_init($serverurl.'&wsfunction='.$function);
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+            CURLOPT_POSTFIELDS => json_encode($params)
+        ));
+
+        // Send the request
+        return curl_exec($ch);
     }
 }

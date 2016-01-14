@@ -18,13 +18,13 @@
 /**
  * Version details
  *
- * @package    webservice_rest
- * @copyright  2009 Jerome Mouneyrac
+ * @package    webservice_restjson
+ * @copyright  2009 Jerome Mouneyrac, 2016 Owen Barritt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015051101;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2016011400;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2015050500;        // Requires this Moodle version
-$plugin->component = 'webservice_rest'; // Full name of the plugin (used for diagnostics)
+$plugin->component = 'webservice_restjson'; // Full name of the plugin (used for diagnostics)

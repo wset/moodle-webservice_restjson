@@ -18,8 +18,8 @@
 /**
  * REST web service entry point. The authentication is done via tokens.
  *
- * @package    webservice_rest
- * @copyright  2009 Jerome Mouneyrac
+ * @package    webservice_restjson
+ * @copyright  2009 Jerome Mouneyrac, 2016 Owen Barritt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,16 +31,16 @@ define('NO_DEBUG_DISPLAY', true);
 define('WS_SERVER', true);
 
 require('../../config.php');
-require_once("$CFG->dirroot/webservice/rest/locallib.php");
+require_once("$CFG->dirroot/webservice/restjson/locallib.php");
 
-if (!webservice_protocol_is_enabled('rest')) {
+if (!webservice_protocol_is_enabled('restjson')) {
     header("HTTP/1.0 403 Forbidden");
     debugging('The server died because the web services or the REST protocol are not enable',
         DEBUG_DEVELOPER);
     die;
 }
 
-$server = new webservice_rest_server(WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN);
+$server = new webservice_restjson_server(WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN);
 $server->run();
 die;
 

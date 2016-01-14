@@ -49,7 +49,7 @@ if (isset($_POST['moodlewsrestformat'])) {
     unset($_POST['moodlewsrestformat']);
 }
 
-$server = new webservice_rest_server(WEBSERVICE_AUTHMETHOD_USERNAME);
+$server = new webservice_restjson_server(WEBSERVICE_AUTHMETHOD_USERNAME);
 $server->run();
 die;
 
