@@ -74,9 +74,28 @@ class webservice_restjson_server extends webservice_base_server {
             $data = $_POST;
         }
 
+        
+        
         // Add GET parameters.
         $methodvariables = array_merge($_GET, (array) $data);
 
+        // Check accept header for accepted responses.
+        if( isset($_SERVER["HTTP_ACCEPT"]) ) {
+            $accept = array_map('trim', explode(',', $_SERVER["HTTP_ACCEPT"]));
+            if(!empty($accept)){
+                if(!in_array('application/xml',$accept)) {
+                    if(in_array('application/json', $accept)) {
+                        $defaultrestformat = 'json';
+                    } else {
+                        http_response_code(406);
+                        throw new invalid_parameter_exception('No response types acceptable');
+                    }
+                } else if( $defaultrestformat == 'json' && !in_array('application/json', $accept) ) {
+                    $defaultrestformat = 'xml';
+                }
+            }
+        }
+        
         // Retrieve REST format parameter - 'xml' or 'json' if specified
         // where not set use same format as request for xml/json requests or xml for form data.
         $restformatisset = isset($methodvariables['moodlewsrestformat'])
