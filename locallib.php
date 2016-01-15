@@ -64,10 +64,10 @@ class webservice_restjson_server extends webservice_base_server {
 
         // Check request content type and process appropriately.
         $defaultrestformat = 'xml';
-        if ($_SERVER["CONTENT_TYPE"] == "application/json") {
+        if (preg_match("#application/json#",$_SERVER["CONTENT_TYPE"])) {
             $data = json_decode( file_get_contents('php://input'), true );
             $defaultrestformat = 'json';
-        } else if ($_SERVER["CONTENT_TYPE"] == "application/xml") {
+        } else if (preg_match("#application/xml#",$_SERVER["CONTENT_TYPE"])) {
             $data = simplexml_load_string( file_get_contents('php://input') );
             $data = json_decode( json_encode($data), true ); // Convert objects to assoc arrays.
         } else {
