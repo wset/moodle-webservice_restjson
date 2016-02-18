@@ -45,7 +45,7 @@ class webservice_restjson_server extends webservice_base_server {
      */
     public function __construct($authmethod) {
         parent::__construct($authmethod);
-        $this->wsname = 'rest';
+        $this->wsname = 'restjson';
     }
 
     /**
