@@ -80,7 +80,7 @@ class webservice_restjson_server extends webservice_base_server {
         $methodvariables = array_merge($_GET, (array) $data);
 
         // Check accept header for accepted responses.
-        if (isset($_SERVER["HTTP_ACCEPT"])) {
+        if (isset($_SERVER["HTTP_ACCEPT"]) && $_SERVER['HTTP_ACCEPT'] != "*/*") {
             $accept = array_map('trim', explode(',', $_SERVER["HTTP_ACCEPT"]));
             if (!empty($accept)) {
                 if (!in_array('application/xml', $accept)) {
