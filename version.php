@@ -28,4 +28,4 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version   = 2016021800;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2015050500;        // Requires this Moodle version
 $plugin->component = 'webservice_restjson'; // Full name of the plugin (used for diagnostics)
-$plugin->release   = '0.2 for Moodle 2.9+';
+$plugin->release   = '0.3 for Moodle 2.9+';
