@@ -31,9 +31,9 @@ define('NO_DEBUG_DISPLAY', true);
 define('WS_SERVER', true);
 
 require('../../config.php');
-require_once("$CFG->dirroot/webservice/rest/locallib.php");
+require_once("$CFG->dirroot/webservice/restjson/locallib.php");
 
-if (!webservice_protocol_is_enabled('rest')) {
+if (!webservice_protocol_is_enabled('restjson')) {
     die;
 }
 
