@@ -25,6 +25,8 @@
 
 require_once("$CFG->dirroot/webservice/lib.php");
 
+use core_external\external_api;
+
 /**
  * REST service server implementation.
  *
